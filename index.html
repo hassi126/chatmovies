@@ -1,0 +1,1978 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/Js/scripy.js">
+    <link rel="stylesheet" href="/css/lightslider.css">
+    <script src="/Js/JQuery3.3.1.js"></script>
+    <script src="/Js/lightslider.js"></script>
+    <script src="/Js/scripy.js"></script>
+    <title>Dynamic Categories in One File</title>
+    <style>
+        body {
+            margin: 0px;
+            padding: 0px;
+            font-family: poppins;
+            background-color: rgba(151, 151, 151, 0.03);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            width: 100%;
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            background-color: #ffffff;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo img {
+            height: 35px;
+        }
+
+        .trailer video {
+            max-width: 900px;
+            outline: none;
+        }
+
+        .trailer {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 100;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            transition: 0.5s;
+        }
+
+        .trailer.active {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        nav .menu {
+            display: flex;
+        }
+
+        nav .menu li a {
+            height: 40px;
+            line-height: 43px;
+            margin: 0px;
+            padding: 0px 22px;
+            display: flex;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            font-weight: 500;
+            color: #585858;
+            letter-spacing: 1px;
+        }
+
+        .search {
+            width: 24px;
+            height: 40px;
+            background-color: rgba(245, 245, 245, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 20px;
+            padding: 0px 20px;
+        }
+
+        .search input {
+            width: 100%;
+            height: 30px;
+            border: none;
+            outline: none;
+            background-color: transparent;
+        }
+
+        .search i {
+            color: #3a3a3a;
+        }
+
+        nav .menu li a:hover {
+            background-color: #242424;
+            color: #ffffff;
+            box-shadow: 5px 10px 30px rgba(53, 53, 53, 0.1);
+            transition: all ease 0.2s;
+        }
+
+        #main {
+            padding-top: 80px;
+            background-color: #ffffff;
+        }
+
+        .showcase-box {
+            width: 430px;
+            height: 250px;
+            box-shadow: 5px 15px 30px rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            margin: 0px 20px 10px 20px;
+            overflow: hidden;
+        }
+
+        .showcase-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top;
+        }
+
+        .showcase-heading {
+            padding-left: 30px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-size: 1.2rem;
+            color: #1a1a1a;
+        }
+
+        .cs-hidden {
+            overflow: visible !important;
+        }
+
+        #latest {
+            border-top: 1px solid rgba(53, 53, 53, 0.1);
+        }
+
+        .latest-heading {
+            margin: 30px 30px 0px 30px;
+            font-weight: 500;
+            font-size: 1.3rem;
+        }
+
+        .latest-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 2px 2px 30px rgba(0, 0, 0, 0.2);
+            margin: 20px 10px;
+            border-radius: 10px;
+            overflow: hidden;
+            width: 200px;
+            background-color: #ffffff;
+        }
+
+        .latest-b-img {
+            width: 100%;
+            height: 270px;
+        }
+
+        .latest-b-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .latest-b-text strong {
+            color: #3a3a3a;
+            margin: 0px;
+        }
+
+        .latest-b-text {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            margin: 10px;
+        }
+
+        .latest-b-text p {
+            color: #979797;
+            margin: 0px;
+        }
+
+        .movies-heading h2 {
+            font-weight: 400;
+            margin: 0px;
+            padding: 1px 20px;
+            background-color: rgba(0, 0, 0, 0.01);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            font-size: 1.7rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            width: 100%;
+        }
+
+        .movies-heading {
+            display: flex;
+            margin: 100px 2%;
+        }
+
+        .movies-box {
+            width: 300px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-direction: column;
+            box-shadow: 2px 2px 30px rgba(0, 0, 0, 0.2);
+            margin: 20px;
+            border-radius: 5px;
+            overflow: hidden;
+            border-top: 3px solid #292929;
+        }
+
+        .movies-img {
+            width: 100%;
+            height: 400px;
+            position: relative;
+        }
+
+        .movies-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .movies-box:hover {
+            transform: translateY(-10px);
+            transition: all ease 0.2s;
+        }
+
+        #movies-list {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .quality {
+            position: absolute;
+            top: 0px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #1f1f1f;
+            color: #ffffff;
+            padding: 5px 20px;
+            font-weight: 500;
+            border-radius: 0px 0px 10px 10px;
+            box-shadow: 5px 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .btns {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btns a {
+            width: 130px;
+            height: 40px;
+            border: none;
+            outline: none;
+            color: #ffffff;
+            background-color: #3963f0;
+            margin: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1rem;
+        }
+
+        .btns a:hover {
+            background-color: #284fd1;
+        }
+
+        footer {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        a:hover {
+            background-color: #284fd1;
+        }
+
+        footer p {
+            color: #5e5e5e;
+            margin: 10px 0px;
+            font-size: 0.9rem;
+        }
+
+        nav .menu-btn {
+            display: none;
+        }
+
+        @media(max-width:1100px) {
+            nav {
+                justify-content: space-between;
+                height: 70px;
+                padding: 0px 10px;
+            }
+
+            nav .menu {
+                display: none;
+                position: absolute;
+                top: 65px;
+                left: 0px;
+                background: #fff;
+                border-bottom: 4px solid #242424;
+                width: 100%;
+                padding: 0px;
+                margin: 0px;
+            }
+
+            .menu li {
+                width: 100%;
+            }
+
+            nav .menu li a {
+                width: 100%;
+                height: 40px;
+                align-items: center;
+                margin: 0px;
+                padding: 25px;
+                border: 1px solid rgba(38, 38, 38, 0.03);
+            }
+
+            nav .menu-icon {
+                cursor: pointer;
+                float: right;
+                padding: 28px 20px;
+                position: relative;
+                user-select: none;
+                display: block;
+            }
+
+            nav .menu-icon .nav-icon {
+                background-color: #333333;
+                display: block;
+                height: 2px;
+                position: relative;
+                transition: background 0.2s ease-out;
+                width: 18px;
+            }
+
+            nav .menu-icon .nav-icon:before,
+            nav .menu-icon .nav-icon:after {
+                background: #333333;
+                content: '';
+                display: block;
+                height: 100%;
+                position: absolute;
+                transition: all ease-out 0.2s;
+                width: 100%;
+            }
+
+            nav .menu-icon .nav-icon:before {
+                top: 5px;
+            }
+
+            nav .menu-icon .nav-icon:after {
+                top: -5px;
+            }
+
+            nav .menu-btn:checked~.menu-icon .nav-icon {
+                background: transparent;
+            }
+
+            nav .menu-btn:checked~.menu-icon .nav-icon:before {
+                transform: rotate(-45deg);
+                top: 0;
+            }
+
+            nav .menu-btn:checked~.menu-icon .nav-icon:after {
+                transform: rotate(45deg);
+                top: 0;
+            }
+
+            nav .menu-btn {
+                display: none;
+            }
+
+            nav .menu-btn:checked~.menu {
+                display: block;
+            }
+        }
+
+        @media(max-width:680px) {
+            .showcase-box {
+                max-width: 300px;
+                height: 180px;
+                margin: 10px;
+            }
+
+            .latest-box {
+                width: 190px;
+                margin: 20px 5px;
+            }
+
+            .movies-box {
+                flex-direction: row;
+                width: 90%;
+                border: 1px solid rgba(0, 0, 0, 0.2);
+            }
+
+            .movies-box a {
+                width: 65%;
+            }
+
+            footer {
+                justify-content: space-between;
+                padding: 0px 20px;
+                text-align: center;
+            }
+        }
+
+        @media(max-width:440px) {
+
+            .movies-box a,
+            .movies-box {
+                width: 100%;
+            }
+        }
+
+        .movies-box {
+            flex-direction: column;
+        }
+
+        .logo img {
+            height: 50px;
+        }
+
+        .search {
+            width: 24%;
+            height: 40px;
+        }
+
+        .close {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            cursor: pointer;
+            filter: invert(1);
+            max-width: 30px;
+        }
+
+        .shareparagraph {
+            color: #05db45b2;
+        }
+
+        .content {
+            display: none;
+            padding: 20px;
+        }
+
+        .content.active {
+            display: block;
+        }
+
+        .home {
+            display: block;
+            padding: 20px;
+        }
+    </style>
+</head>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Website</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lightslider/dist/js/lightslider.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightslider/dist/css/lightslider.min.css">
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <nav>
+        <!-- Logo -->
+        <a href="/AboutUs/AboutUS.html" class="logo">
+            <img src="/images/hassilogo.jpg" alt="Logo">
+        </a>
+        <!-- Menu Button -->
+        <input type="checkbox" class="menu-btn" id="menu-btn">
+        <label class="menu-icon" for="menu-btn">
+            <span class="nav-icon"></span>
+        </label>
+        <!-- Menu -->
+        <ul class="menu">
+            <li><a href="javascript:void(0)" onclick="showContent('home')">Home</a></li>
+            <li><a href="javascript:void(0)" onclick="showContent('Bollywood')">Bollywood</a></li>
+            <li><a href="javascript:void(0)" onclick="showContent('Hollywood')">Hollywood</a></li>
+            <li><a href="javascript:void(0)" onclick="showContent('HindiDub')">Hindi Dub</a></li>
+            <li><a href="javascript:void(0)" onclick="showContent('Punjabi')">Punjabi</a></li>
+            <li><a href="javascript:void(0)" onclick="showContent('Dramas')">Dramas</a></li>
+            <li><a href="javascript:void(0)" onclick="showContent('Pakistani')">Pakistani</a></li>
+            <li><a href="javascript:void(0)" onclick="showContent('Cartoon')">Cartoon</a></li>
+        </ul>
+        <!-- Search -->
+        <div class="search">
+            <input type="text" placeholder="Find Your Favourite Movies">
+            <i class="fas fa-search"></i>
+        </div>
+    </nav>
+
+    <!-- Content Section -->
+    <div id="home" class="content active">
+        <!-- Showcase Section -->
+        <section id="main">
+            <h1 class="showcase-heading">Showcase</h1>
+            <ul id="autoWidth" class="cs-hidden">
+                <li class="item-a">
+                    <div class="showcase-box"><img
+                            src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAJQBCwMBIgACEQEDEQH/xAAcAAABBQEBAQAAAAAAAAAAAAADAAIEBQYBBwj/xABCEAABBAEBBAYIAwQIBwAAAAABAAIDBBEFBhIhMRMiQVFhkwcUF1JxgZHhMqGxFSOCwSQzQnJzstHwFlNkg6PC8f/EABsBAAIDAQEBAAAAAAAAAAAAAAABAgMEBQYH/8QAKhEAAgEDAwQCAgEFAAAAAAAAAAECAxESBBRREyExUiJBMnEFM2GBkaH/2gAMAwEAAhEDEQA/APIS1LdRN1dwutiYcge6u7qfhd3SniK4PdThGTyRmRlxU2vVBI4IxIudiJFVcexSo6JI4hXVLTi8jgVf1tELmZ3U8TPPUWMHNTIHJQ3xFq3Gp6YIgeCzNyvjOAhxJwq5FVupbqMWJNjJ5JYluQEMJRWV3O7FLhrb2OCsq9InHBNRIyqWKplMkck80ThamppJfjgpsuibsZO6niUPUJGBmrFvIKPu9601+nuZGFSywEOSsXQqXIe6nCIlSmVyTyUmOr4JYknOxXtrk9iMyqe5WsVQHvU2HTy5PErlVKNtNPFLPYtTX0rOOqpjNELhndRiVPUJGIfSI7FEmrY7FuLml9GDwws9cgDSRhGJZCrcz7mYKbuqVMzDkEtScTQpAiFzCNupu6lYkmCwuEIpauFqViSYLC5hEwuYRiO5LwuhqJupwatCiZnIEGp7YySnhnFSoIskJ4kHIVevk8lc0qmXDghVoOSvaEGCEmjPOoWGl0hnJAWqqxRxQ5LRyVPWdFWZ0kz2sYCBlxxxPABamrUDADJxd2DsCqqVIwXcohp6uolZeDH67Vc/e3W9md3PEZ5FYPUYsOIIwc9owVdabtF+1dvdaj3gYZo92A9/RHs+ReVsNE0CDWrZdchElWL8Wf7R7BlZY6vv8kdVaDFfFnjzouvhSIK/gvT9pfRvRrVp7tC46uyMbxjn6zfgCOKw8VVzHYcPotdOrCfhlNSE4eUDrVc44K+oUgccEOlX5K/pQ4AVtjDUqEzT6LRg4Cm6iyIV8AAHC5C7caFFvTZaQlYy3bkZDV4QXuws/PX48lqLrd5xKq5Icp4m2E7IrIq3HkpsFQnsUqGvkqyr1+XAIxHKoRa1LPNqt6lEcOqjV4FZQNa1RsZ5VGKrRbw4BWXRQQxEkDOOSjdM1g4cFAv38AjKdijvIrdclZh2Fir5G8SrzU7e8Ss5bfklGJvoqyKybi5CIR38Sm4SxNikBIXCEXC4QjEkpASE0hGITSEYkkwJC5hFIXMJOJK5ODU8NRWxojYlqUDFKYJkeSrCvFyTYYeXBWEEQGMp4lLnwHqxcQrWzKdM0iXU5Iy6GIhoPIOcTgAKZsTplfWLthsoeYaoaXY4Nc4n8Ki+mm82Jmm6NAGtjAM72N4YA4NGPiSfkufqNVGLxj5NNDRyqfKfgo9jZbm1O21R90n1emHWOibwYzHL5knmvS9udXOi7L37zHYlEe5D/iO6o/1+Sy3oa0+Oro+oazYxGJ5Oia95wBGziTn+8SP4VXekXaCttEYKGmjpq8EhkfK4dRz8EDA/tYyfDiuZJ5O7OtGKirLwee7OySabqlPU3EMhgkDnZ5vbyc0DtyMhe97I7dbKWKkVSC/6tKB1m2xuFzu3ieBXjH7LkkO/JvOd273YnnRc8HMJ7MEKNyR6xt7rAtSNoVXh1dmHPkach7uwA9oH6qk2S0T9sarmVn9Fr9eXPJx7G/M/oVh4ql+jk1n2IW9wB3foeB+YWl2b2+1PQIvVp9Nq2q5cXPdHmKUnvz+E/DARfgGenato2k9DLaniZXEbd98kXV5eHIrKUpGyRCRjcNd2FQ9c2zZtRVhqadBagYDvzsljJLiOQyMjHbzT9MbLFDuTRvYeY3m4W7S1HlizmfyFCPTzivBZl+GqBakyMIrn8FEmOV01A4aaK+YZJUfo8uU17clMEfFSxLVIbBEp0LUJjcI7ThJoi5XJTCnmfdUMyYUeWfxUcRLuSrFvAPEKmuW85SsT5yqyxJklSUS2CSI1uXeJVVMd4qbOSSormZTxNMWkRi1NIUgxppYotFqkRiFwhHLE0tSxJZACE3COWphalYmpASE3CKWrmEWJ3LuOPLQjRxcRwRYY8sb8FIii8FsS7HInU8nIYuXBWFdobHJlucjgmwxKWIS+NzW8y0gKqtG8HYjRrKNRNm19HdH1PQBMR17UjpM+HIfovJduLT9b2v1Gw3Jhjk9Xi7ctZ1eHxO8c+K3up7WSMrR6Xoh9UgjaIvWp27rnY5lgP6rz+9dq0Xuiqbs0uevKesM9vxK81K6bR6mMk0miVG/ULOm1dOkkLaVdm4yBgw13aS73iTk/yR9OrRz2hUqgyz8yxgzuDvJ5AfFVWpbRNNBtTT2SNcf66xKRvP8AAAfhCpWa3qFWrJWq2DDFIf3nRjDn+BPNK1yRqLt/F0UKE1cOzuvtSODY2d5ye781vNG06lSpx9HL6xM9gebD+PSA8i3sA8P/AKvA3nJ48fivdmPazRKEjzgNpwknu6jUNWAptQ13UqerGlc06Do8b2WPP4Ow5IwforbZXZxmvPdql+FsWmtJ3GNGDNjn/D49qz8EFraLWq1KPf8A3sjWvdn+rZx/QZ+eVsNrdvKuympw6FRqQyQ1YmiXLsHOBhrQO4cTntKS7sUr+EXOralDpGkwSaHTrubIMsYWlgDR4cDnwVPou18WsWmU9Spxs6U7jHsJI3u455Ie3tySxsZV1zQn7sMO69wAyRG4jJx4Oxn5rD7K2Zr+vaJSh6wfMZpDjkGdYn8grHJK2PkoVNyTy8Hoes6YK29NWd0lfeLXdvRnuKo3ha2TV9Pgv2NNMYILg6yQeDXPA44+hWf1GoalyWA5O6eqe8di7Olq5K0jz+spxpyyRWFq4Go7mpu6tljD1Bq4XJx4IbspWGpjHyKLK9Geo0gRiSUyNM7moMwJU57SUB8eVKxYqhXuZk8QmGNTzGhujRYtVQgujTCxTXMQnMUWi1VCGWJhapbmIbmqLRapkUtTC1SS1DLUrFikRy1M3VIcEzCVixSNNXZljT4KbFEh1mfu2/BTomLV9HBqT7sdFGpUcY7spRMUuNngoNmZ1Ck2l6sDRk/hWCtOHTbgI3jwDc8T8l6Lr07Kzw58Ucg3eT2B2Phngsw/VbNp1hlGN1djK0uBX/tHhjg0DiPBebq/mz2+m70o/ooG6ZfmJEdKxjvfGWD6uwPzT27N6hI/cJrRvDd4tdMCQO/q5Umw3Xb1L1cwSvhwBh0YaXY4jJOCfquavptoXOlFivWaYmt35LIZkgcuCrZeVGp6fBR6guiWwCMxNhc0fHeK9W1WYx7O6awY/eVoMjwEYJXk96myGPpP2jXnl3gNyNxcfqvStopC3S9IA7KUZ/8AG1RfgZpfRLUDrkl6Ru8Y4Xy8RzzwH5ZXl3qU+0G19y1bDj0s0szy7hkNPAfoPmvUvQleaaWretfu2VY2Ze/luEuKG/0dzPv2tR0HUKkun3Yy+uXOOQHOa7gccQod7dhppPuV/oqsdLDrGy2pNElUMMga73JMh4+vH5laHYzYCrs1qk95tx9pxb0UG83HRsJzxPaeSFs9sjf2ej1TUOmgs6vYhLa7BkRtLQS0E8M5dhWFOO3FZNiq9rdRsyVn6jFM8mONu7unoye3hy71NeCptNux5Ls9rstvbO9JaJ3b9iQlruw5OB8gMfJeoai0z6ZStOyXt3oHk9u6eChWfRhQk2gfrFbULNYSS9Oa7GAtDycuAJ7M9i0F6u2PTZKkcT92Ate1x/tFxOf5rdpatrL+5yP5OldSkvtf9Rl3MTCzgpxiwhujXbueRVcguahPap7o0B8aCarEB7UB7SVYPjQnRJk1VK90aE6NWDo0F7EFsahBcxCdGpzmIL2oL4zILmITmKY9qC4IL4yIjmoTmqU8ITglYvjIiuCGWqQ5qG5qVi+LI7mpm6juCHhFi1M11UDo2/BTogoNU9RvwU+FwVjPPVfLJkLVMjCiROCmRHkoMxzbKzUzK2w4xVxMQ3kXBuPmspqtjUdx0U0tSp0nJ0ltodjwOeP0Wr1b+uefWTBhv4gQM/VYPU5aUk56efUp90kA77APlkLzlX82fQdJ/Qh+iDPAx5xb1mA/3RPL/wCgH5qG+tpDHcdQsP8A8KgB/mkClSTaawdWhNJ/i2CP8oQTfos4N0aD+Kd7v1VZoIV52mdHu0mXTJkfvJ3sAx/dA/mvStpGH9jaQ/8A6OIHy2rza9fZPD0Uen1a7c53o2db6r1jWq5n2YouaMllSFw8tqi/xGS/Qp/SrWtVbjWvrWYRGGk/i3fxD6ORNpfSG7Z3Wjsts1RqsrUITEHzbzuuG5DQM8uzjnKpvRxqjdJ12ISHDDJn+F4DT9MBVnpU0OXR9u7FxhPRXSLULsjB7HAfA/qFH6BK7NNsVt1qOvavJo2tiH+lwvNeaFm4WkA5b9MkHvC01fQ5819ItudLpVSKB0FjpMTPmjcT1j3clh/RnQZqG2DLcI/cUKpkOPfflrR9N/6Jmt+kTU621liWvI06VTs9C+u1o67QcOdnvyDhST5ISj3siHtrruqT7banW9anjgqy9DFDG8tGABxwO8nP0W4vN1j/AIOnq6bOTqLHRCORxzzwXDj8/qqX0haNE7VaG01Mh9a22MSvYMtJ4Fj/AJt4Z8AtBtFYk0/Zd88QxNI8S4cDnHADh8AD81bCPxkzn6qs4VqfFu/+7Ii6HT1mHTx+3Sx05PB7cfyUp0Y8Vl9hNrbuuvdXtNjDWgHLWnuJ/kte2OzLJIG1sxNGRJ0gyfDd5rp6avaksmeT/ltHPfTjRV1a5BfGgvjCmSOHdj48FGe4LamciLlfuRnsQHtUl7go73BSNEWwD2oD2hHe5R3uUrGiNwLwo7wjvKA8qVjVAA9AcjvKC5OxoiBcEFwUhwQ3BFi+LI7ghuCO4IbgixdFkdwTMIzgmYRYuTNBDJgBTIpvFVbXYR2SKVjlThcuopgpkVgd6oGTeJR2W8cOfeoOJmlQuWlzRpNZDyydkLW7rcuaXZJVF/wC2eRoGsMBcQOFd3A/VW0O1NbS4Xh1QXHO3Tumd0e6R8AVBdt+2J4Mey7OqctP7QkPzxurzlWMs32Pa6aUVSir/R5xaZ0U0sWQSx5aSO3BUKRWNpk0s0khjcC9xcRjlk5wockEvuO+irxlwX5x5ITuY+K94iaHaLRa4ZBpQ5H8AXhboJd4dQ4+C9og1WkNKoRmcB7asTXDB4EMCThLgeS5MtZquq3XRA4cCTCexwPNq3oqVPSdshHpt2YVtX045ZLjJA5B2O1pGAR34WQ1axUtsI6Q8DlpAwQVE03W7GmX4rTHubZj/DYibneHc5vd8FHCXA8lyej7LaJR2I027pcNsWdWdWfck6u6XhoIGB3Z/VeTadUr2OlZYLw2XJc9oyS7n+ZXrui7a6Jqc4nuxMr3+j6J0pjJBbnON7sGewqHLpWxem79l0xdGCXiFkhIHbgBoyn05P6K3Uxvcl7Em7U2c0uNxjFKESNmfMTkRt/AR88/ILOekXaCG5pTfVGmXpz1WhucNBODw8ePyKrtsNuG6pSfpunU7ENEjHAYLwOzwHgspDZmxCJW2TEzgGtdjHyyrsJw+KXkxThCs4yk7KLv+zW+j6o2rTksPg6JzuAJaQT/ALx+ao9a13Vptde3Tbr4o8kBokwOf+/qrKxrzm0+grwzcW4yWngomlUq7ZfWZ4Yt/nxac/qr50pNRox/yzDp5KNapq6va/ZGuqzzCrH6zIZJCOLnHJPd+WEnz+KrnWsjAKYZ/FdmFOySPMTpOc3J/ZNfN4oDpVHMvihl6sxJxpBnSIL3phcmkp2LlE45yG7JTimlOxagbghuCI4pjkyxA3ITkVyG4oLYgnBCciOKG4oL0Behoj0NBci0BRGuUUPTw9K5lcSY1ycDlRWvTxIi5U4EypHAXydJEyTiMB4zhFMFRxH9EhHH3FXCQ9hI+Cf0rsfjP1Wd0k3cuVSSREfTaXO+KE6g08VPz2pJdFB15ladNaexXjIG9DG3ujaPyUYKU2XDGjwS6KDcT5BuqNToNOjkdl3Bg/NIyZT5ZsRiNhx3lHRQbmpySiGQh7I48MY3IPYUFk0mA7qnjjdQ2TF0Za53ZjJQGkgcOaaooT1M39h7lRkjS+INa88SB2hRfV9wA55+CliUM3e0gJkjwc4UunH7K+tM4yNjmYBQ4+o/GM/NPa/AwkQwnJPFNwXbkiptXQccksoO+BwHJc31dcpcQ+VzKCZB3hcMg7wi4Yhi5MLkIvTS/wAUXJKIUuTC5CL00vRcmohC5Mc5DL0xz+KLliiPc5DcUwvQ3PRcsjEc4oTiuOehOei5dGInlDyuOch7yLl6iShL4pwl8VrvZJtR71LzfsnD0TbUe9T837LBvKXsXPST4MkJvFPE3itWPRPtR71PzfsnD0UbT+9T837I3lL2IPRVODKCXxTul8VqvZTtP71Pzfsu+yraftdT837I3dL2IbGpwZYS+K70q1Psr2m76fm/ZL2V7Td9Pzfsjd0vYT0NTgy/Sp4n8VpvZZtN30/N+y77LNpu+n5v2T3dH2FsavBmBMe9Lps8ytP7Ldpe+n5v2S9l+0vfT837I3dH2FsKvBmRN4pdN4rT+y/aXvp+b9lz2X7S99Pzfslu6XsGwq8GZ6fxSM3itN7L9pe+n5v2S9l+0vfT837J7uj7BsKvBmem8UumPetN7L9pe+n5v2SPou2lzxdTH/d+yN3R9g2FTgzHTnvXOmK1Hsu2l96n5v2XPZdtL71Pzfsjd0fYNhU4Mv03iudL4rUn0XbSjm6n5v2XD6LNpvep+b9kbuj7D2FTgy3TeKb0vitX7K9pvep+b9lz2VbTd9Pzfsjd0fYexqcGTM3immbxWt9lO03fT837Lh9FG0/Y6n5v2S3dL2JLRVODIGbxTDN4rYeyfaj3qfm/Zc9k21HvU/N+yN5S9ia0c+DGmXxTHS+K2h9Eu1HvUvN+yafRHtR71PzvsjeUvYmtJPgxLpfFDdJ4rcn0RbUe9S837Jh9D+1Hv0vNP+iN5S9ixaafBhXSeKH0nit4fQ7tT/zKXm/Zc9ju1P8AzKXm/ZLeUvYmtPLg+hEkklwDoiSSSQAkkkkAJJJJACSSSQAlnNZtWfX5YI5nRMiFZzdwDOXSHJJIPY3HzK4kgCtl1XULWnGUXHwPFGabMLWjrBpxzB5c0Ju0WpPsahD0zWtrTPjYRG3JAIbx+ufj4cEkkAS9T1a/p3rDorJk3ZnANla0gDea3HAA8M5+P0RaWpW2ya9GZd71R7ejc4DOXNGSez+SSSAAalrOoVZ3Rx2chrZ3ZdG3P7pr8dnbujP5YVzQuTWJ2VpHDjC8mQDDsh5bnu5DuSSQBRavbtVNGp2YrVgvNEOfmV3XIA58efHORg+KkSy2BKJRbsg+rxybvSnd3urxx/GeHLgEkkAGumeOmJG3LIeJbEWekPJolI+fAcezAxhV9e5Zt6e6d9mdrnxT8GTOAaWOY1pHHnhx+K6kgDaRjDW8ScDtT0kkAJJJJACSSSQAkkkkAJJJJACXEkkAf//Z"
+                            alt="Showcase 1"></div>
+                </li>
+                <li class="item-b">
+                    <div class="showcase-box"><img
+                            src="data:image/jpeg;base64,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"
+                            alt="Showcase 2"></div>
+                </li>
+                <li class="item-c">
+                    <div class="showcase-box"><img
+                            src="data:image/jpeg;base64,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"
+                            alt="Showcase 3"></div>
+                </li>
+                <li class="item-d">
+                    <div class="showcase-box"><img src="/images/s-4.jpg" alt="Showcase 4"></div>
+                </li>
+                <li class="item-e">
+                    <div class="showcase-box"><img src="/images/s-5.png" alt="Showcase 5"></div>
+                </li>
+                <li class="item-e">
+                    <div class="showcase-box"><img src="/images/s-5.png" alt="Showcase 6"></div>
+                </li>
+
+            </ul>
+        </section>
+
+        <!-- Latest Movies Section -->
+        <section id="latest">
+            <h2 class="latest-heading">Latest Movies</h2>
+            <ul id="autoWidth2" class="cs-hidden">
+                <li class="item-a">
+                    <div class="latest-box">
+                        <div class="latest-b-img"><img src="https://images.app.goo.gl/EFSKGQN3ScAt1GVd8" alt="Movie 1">
+                        </div>
+                        <div class="latest-b-text">
+                            <strong>Red.One.2024</strong>
+                            <p>Action Movie</p>
+                            <div class="btns">
+                                <a href="movie-link.html">Watch</a>
+                            </div>
+                        </div>
+                <li class="item-a">
+                    <div class="latest-box">
+                        <!--img-------->
+                        <div class="latest-b-img">
+                            <img
+                                src="data:image/jpeg;base64,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">
+                        </div>
+                        <!--text---------->
+                        <div class="latest-b-text">
+                            <strong>Blackout 2024. Hassi4u.org WEB-DL Dual Audio ORG 720p 990MB.mkv</strong>
+                            <p>Action Movie</p>
+                            <div class="btns">
+                                <a href="/MoviesFile/Blackout.html" onClick="toggleVideo();">Watch</a>
+                            </div>
+                <li class="item-a">
+                    <div class="latest-box">
+                        <!--img-------->
+                        <div class="latest-b-img">
+                            <img src="/images/m-1.jpg">
+                        </div>
+                        <!--text---------->
+                        <div class="latest-b-text">
+                            <strong>Mary 2024 ORG Hindi Dubbed 720p NF HD.mkv.mp4 at Hassi4u</strong>
+                            <p>Action Movie</p>
+                            <div class="btns">
+                                <a href="/MoviesFile/Mary.html" onClick="toggleVideo();">Watch</a>
+                            </div>
+                <li class="item-a">
+                    <div class="latest-box">
+                        <!--img-------->
+                        <div class="latest-b-img">
+                            <img src="/images/m-1.jpg">
+                        </div>
+                        <!--text---------->
+                        <div class="latest-b-text">
+                            <strong>Gandhi 3 2024 Punjabi full movie download free Punjabi Hassi4u.mp4</strong>
+                            <p>Action Movie</p>
+                            <div class="btns">
+                                <a href="/MoviesFile/Gandhi 3.html" onClick="toggleVideo();">Watch</a>
+                            </div>
+                <li class="item-a">
+                    <div class="latest-box">
+                        <!--img-------->
+                        <div class="latest-b-img">
+                            <img src="/images/m-1.jpg">
+                        </div>
+                        <!--text---------->
+                        <div class="latest-b-text">
+                            <strong>Sir 2024 ORG Hindi Dubbed 720p UNCUT HDRip 1.2GB Hassi4u</strong>
+                            <p>Action Movie</p>
+                            <div class="btns">
+                                <a href="/MoviesFile/sir.html" onClick="toggleVideo();">Watch</a>
+                            </div>
+                <li class="item-a">
+                    <div class="latest-box">
+                        <!--img-------->
+                        <div class="latest-b-img">
+                            <img src="/images/m-1.jpg">
+                        </div>
+                        <!--text---------->
+                        <div class="latest-b-text">
+                            <strong>Gadar 1947 Ki Vichhoda 2024 Punjabi 720p CHTV HD Hassi4u</strong>
+                            <p>Action Movie</p>
+                            <div class="btns">
+                                <a href="/MoviesFile/Gadhar.html" onClick="toggleVideo();">Watch</a>
+                            </div>
+                            <!--slide-box-2------------------>
+                <li class="item-b">
+                    <div class="latest-box">
+                        <!--img-------->
+                        <div class="latest-b-img">
+                            <img src="/images/m-2.jpg">
+                        </div>
+                        <!--text---------->
+                        <div class="latest-b-text">
+                            <strong>Siren 2024. Hassi4u.org WEB-DL Dual Audio ORG 720p 990MB.mkv</strong>
+                            <p>Action Movie</p>
+                            <div class="btns">
+                                <a href="/MoviesFile/Siren.html" onClick="toggleVideo();">Watch</a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <!--slide-box-3------------------>
+                <li class="item-c">
+                    <div class="latest-box">
+                        <!--img-------->
+                        <div class="latest-b-img">
+                            <img src="/images/m-3.jpg">
+                        </div>
+                        <!--text---------->
+                        <div class="latest-b-text">
+                            <strong>Kin 2018</strong>
+                            <p>Action Movie</p>
+                            <div class="btns">
+                                <a href="/MoviesFile/Avesham.html" onClick="toggleVideo();">Watch</a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <!--slide-box-4------------------>
+                <li class="item-d">
+                    <div class="latest-box">
+                        <!--img-------->
+                        <div class="latest-b-img">
+                            <img src="/images/m-4.jpg">
+                        </div>
+                        <!--text---------->
+                        <div class="latest-b-text">
+                            <strong>Kin 2018</strong>
+                            <p>Action Movie</p>
+                            <div class="btns">
+                                <a href="/MoviesFile/Avesham.html" onClick="toggleVideo();">Watch</a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <!--slide-box-5------------------>
+                <li class="item-e">
+                    <div class="latest-box">
+                        <!--img-------->
+                        <div class="latest-b-img">
+                            <img src="/images/m-5.jpg">
+                        </div>
+                        <!--text---------->
+                        <div class="latest-b-text">
+                            <strong>Kin 2018</strong>
+                            <p>Action Movie</p>
+                            <div class="btns">
+                                <a href="/MoviesFile/Avesham.html" onClick="toggleVideo();">Watch</a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <!--slide-box-6------------------>
+                <li class="item-f">
+                    <div class="latest-box">
+                        <!--img-------->
+                        <div class="latest-b-img">
+                            <img src="/images/m-6.jpg">
+                        </div>
+                        <!--text---------->
+                        <div class="latest-b-text">
+                            <strong>Kin 2018</strong>
+                            <p>Action Movie</p>
+                            <div class="btns">
+                                <a href="/MoviesFile/Avesham.html" onClick="toggleVideo();">Watch</a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <!--slide-box-7------------------>
+                <li class="item-g">
+                    <div class="latest-box">
+                        <!--img-------->
+                        <div class="latest-b-img">
+                            <img src="/images/m-7.jpeg">
+                        </div>
+                        <!--text---------->
+                        <div class="latest-b-text">
+                            <strong>Kin 2018</strong>
+                            <p>Action Movie</p>
+                            <div class="btns">
+                                <a href="/MoviesFile/Avesham.html" onClick="toggleVideo();">Watch</a>
+                            </div>
+                        </div>
+                </li>
+                <!-- Repeat similar blocks for other movies -->
+            </ul>
+            <!--movies---------------------------->
+    <div class="movies-heading">
+        <h2>Movies</h2>
+    </div>
+    <section id="movies-list">
+        <!--box-1------------------------>
+        <div class="movies-box">
+            <!--img------------>
+            <div class="movies-img">
+                <div class="quality">HDRip</div>
+                <img src="/images/l-1.jpg">
+            </div>
+            <!--text--------->
+            <a href="movie charlie.html">
+                Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+            </a>
+            <div class="btns">
+                <a href="movie charlie.html">Watch</a>
+            </div>
+        </div>
+        <!--box-2------------------------>
+        <div class="movies-box">
+            <!--img------------>
+            <div class="movies-img">
+                <div class="quality">HDRip</div>
+                <img src="/images/l-2.jpg">
+            </div>
+            <!--text--------->
+            <a href="#">
+                Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+            </a>
+            <div class="btns">
+                <a href="movie charlie.html">Watch</a>
+            </div>
+        </div>
+        <!--box-3------------------------>
+        <div class="movies-box">
+            <!--img------------>
+            <div class="movies-img">
+                <div class="quality">HDRip</div>
+                <img src="/images/l-3.jpg">
+            </div>
+            <!--text--------->
+            <a href="#">
+                Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+            </a>
+            <div class="btns">
+                <a href="movie charlie.html">Watch</a>
+            </div>
+        </div>
+        <!--box-4------------------------>
+        <div class="movies-box">
+            <!--img------------>
+            <div class="movies-img">
+                <div class="quality">HDRip</div>
+                <img src="/images/l-4.jpg">
+            </div>
+            <!--text--------->
+            <a href="#">
+                Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+            </a>
+            <div class="btns">
+                <a href="movie charlie.html">Watch</a>
+            </div>
+        </div>
+        <!--box-5------------------------>
+        <div class="movies-box">
+            <!--img------------>
+            <div class="movies-img">
+                <div class="quality">HDRip</div>
+                <img src="/images/l-5.jpg">
+            </div>
+            <!--text--------->
+            <a href="#">
+                Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+            </a>
+            <div class="btns">
+                <a href="movie charlie.html">Watch</a>
+            </div>
+        </div>
+        <!--box-6------------------------>
+        <div class="movies-box">
+            <!--img------------>
+            <div class="movies-img">
+                <div class="quality">HDRip</div>
+                <img src="/images/l-6.jpg">
+            </div>
+            <!--text--------->
+            <a href="#">
+                Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+            </a>
+            <div class="btns">
+                <a href="movie charlie.html">Watch</a>
+            </div>
+        </div>
+        <!--box-7------------------------>
+        <div class="movies-box">
+            <!--img------------>
+            <div class="movies-img">
+                <div class="quality">HDRip</div>
+                <img src="/images/l-7.jpg">
+            </div>
+            <!--text--------->
+            <a href="#">
+                Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+            </a>
+            <div class="btns">
+                <a href="movie charlie.html">Watch</a>
+            </div>
+        </div>
+        <!--box-8------------------------>
+        <div class="movies-box">
+            <!--img------------>
+            <div class="movies-img">
+                <div class="quality">HDRip</div>
+                <img src="/images/l-8.jpg">
+            </div>
+            <!--text--------->
+            <a href="#">
+                Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+            </a>
+            <div class="btns">
+                <a href="movie charlie.html">Watch</a>
+            </div>
+        </div>
+    </section>
+    <!--btns--------------->
+    <div class="btns">
+        <li><a href="javascript:void(0)" onclick="showContent('next1')">Next</a></li>
+
+    </div>
+        </section>
+    </div>
+    <!--Next1 -->
+    <div id ="next1"class="content">
+        <!--movies---------------------------->
+<div class="movies-heading">
+    <h2>Next 1</h2>
+    </div>
+    <section id="movies-list">
+    <!--box-1------------------------>
+    <div class="movies-box">
+    <!--img------------>
+    <div class="movies-img">
+    <div class="quality">HDRip</div>
+    <img src="/images/l-1.jpg">
+    </div>
+    <!--text--------->
+    <a href="movie charlie.html">
+    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+    </a>
+    <div class="btns">
+        <a href="movie charlie.html">Watch</a>
+        </div>
+    </div>
+    <!--box-2------------------------>
+    <div class="movies-box">
+    <!--img------------>
+    <div class="movies-img">
+    <div class="quality">HDRip</div>
+    <img src="/images/l-2.jpg">
+    </div>
+    <!--text--------->
+    <a href="#">
+    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+    </a>
+    <div class="btns">
+        <a href="movie charlie.html">Watch</a>
+        </div>
+    </div>
+    <!--box-3------------------------>
+    <div class="movies-box">
+    <!--img------------>
+    <div class="movies-img">
+    <div class="quality">HDRip</div>
+    <img src="/images/l-3.jpg">
+    </div>
+    <!--text--------->
+    <a href="#">
+    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+    </a>
+    <div class="btns">
+        <a href="movie charlie.html">Watch</a>
+        </div>
+    </div>
+    <!--box-4------------------------>
+    <div class="movies-box">
+    <!--img------------>
+    <div class="movies-img">
+    <div class="quality">HDRip</div>
+    <img src="/images/l-4.jpg">
+    </div>
+    <!--text--------->
+    <a href="#">
+    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+    </a>
+    <div class="btns">
+        <a href="movie charlie.html">Watch</a>
+        </div>
+    </div>
+    <!--box-5------------------------>
+    <div class="movies-box">
+    <!--img------------>
+    <div class="movies-img">
+    <div class="quality">HDRip</div>
+    <img src="/images/l-5.jpg">
+    </div>
+    <!--text--------->
+    <a href="#">
+    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+    </a>
+    <div class="btns">
+        <a href="movie charlie.html">Watch</a>
+        </div>
+    </div>
+    <!--box-6------------------------>
+    <div class="movies-box">
+    <!--img------------>
+    <div class="movies-img">
+    <div class="quality">HDRip</div>
+    <img src="/images/l-6.jpg">
+    </div>
+    <!--text--------->
+    <a href="#">
+    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+    </a>
+    <div class="btns">
+        <a href="movie charlie.html">Watch</a>
+        </div>
+    </div>
+    <!--box-7------------------------>
+    <div class="movies-box">
+    <!--img------------>
+    <div class="movies-img">
+    <div class="quality">HDRip</div>
+    <img src="/images/l-7.jpg">
+    </div>
+    <!--text--------->
+    <a href="#">
+    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+    </a>
+    <div class="btns">
+        <a href="movie charlie.html">Watch</a>
+        </div>
+    </div>
+    <!--box-8------------------------>
+    <div class="movies-box">
+    <!--img------------>
+    <div class="movies-img">
+    <div class="quality">HDRip</div>
+    <img src="/images/l-8.jpg">
+    </div>
+    <!--text--------->
+    <a href="#">
+    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+    </a>
+    <div class="btns">
+        <a href="movie charlie.html">Watch</a>
+        </div>
+    </div>
+    </section>
+    <!--btns--------------->
+    <div class="btns">        
+        <div class="btns">
+            <li><a href="javascript:void(0)" onclick="showContent('home')">Previous</a></li>
+            <li><a href="javascript:void(0)" onclick="showContent('#')">Next</a></li>
+
+    </div>
+    <!-- Other Categories -->
+    <div id="Bollywood" class="content">
+        <!--movies---------------------------->
+        <div class="movies-heading">
+            <h2>Bollywood Movies</h2>
+        </div>
+        <section id="movies-list">
+            <!--box-1------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-1.jpg">
+                </div>
+                <!--text--------->
+                <a href="movie charlie.html">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+            <!--box-2------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-2.jpg">
+                </div>
+                <!--text--------->
+                <a href="#">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+            <!--box-3------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-3.jpg">
+                </div>
+                <!--text--------->
+                <a href="#">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+            <!--box-4------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-4.jpg">
+                </div>
+                <!--text--------->
+                <a href="#">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+            <!--box-5------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-5.jpg">
+                </div>
+                <!--text--------->
+                <a href="#">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+            <!--box-6------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-6.jpg">
+                </div>
+                <!--text--------->
+                <a href="#">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+            <!--box-7------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-7.jpg">
+                </div>
+                <!--text--------->
+                <a href="#">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+            <!--box-8------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-8.jpg">
+                </div>
+                <!--text--------->
+                <a href="#">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+        </section>
+        <!--btns--------------->
+        <div class="btns">
+            <a href="/Next/next1.html">Next</a>
+        </div>
+    </div>
+    <div id="Hollywood" class="content">
+        <!--Hollywood movies---------------------------->
+        <div class="movies-heading">
+            <h2>Hollywood Movies</h2>
+        </div>
+        <section id="movies-list">
+            <!--box-1------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-1.jpg">
+                </div>
+                <!--text--------->
+                <a href="movie charlie.html">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+            <!--box-2------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-2.jpg">
+                </div>
+                <!--text--------->
+                <a href="#">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+            <!--box-3------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-3.jpg">
+                </div>
+                <!--text--------->
+                <a href="#">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+            <!--box-4------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-4.jpg">
+                </div>
+                <!--text--------->
+                <a href="#">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+            <!--box-5------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-5.jpg">
+                </div>
+                <!--text--------->
+                <a href="#">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+            <!--box-6------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-6.jpg">
+                </div>
+                <!--text--------->
+                <a href="#">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+            <!--box-7------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-7.jpg">
+                </div>
+                <!--text--------->
+                <a href="#">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+            <!--box-8------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-8.jpg">
+                </div>
+                <!--text--------->
+                <a href="#">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+        </section>
+        <!--btns--------------->
+        <div class="btns">
+            <a href="/Next/next1.html">Next</a>
+        </div>
+    </div>
+    <div id="HindiDub" class="content">
+        <!--Hindi Dub movies---------------------------->
+        <div class="movies-heading">
+            <h2>Hindi Dub Movies</h2>
+        </div>
+        <section id="movies-list">
+            <!--box-1------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-1.jpg">
+                </div>
+                <!--text--------->
+                <a href="movie charlie.html">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+            <!--box-2------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-2.jpg">
+                </div>
+                <!--text--------->
+                <a href="#">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+            <!--box-3------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-3.jpg">
+                </div>
+                <!--text--------->
+                <a href="#">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+            <!--box-4------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-4.jpg">
+                </div>
+                <!--text--------->
+                <a href="#">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+            <!--box-5------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-5.jpg">
+                </div>
+                <!--text--------->
+                <a href="#">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+            <!--box-6------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-6.jpg">
+                </div>
+                <!--text--------->
+                <a href="#">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+            <!--box-7------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-7.jpg">
+                </div>
+                <!--text--------->
+                <a href="#">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+            <!--box-8------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-8.jpg">
+                </div>
+                <!--text--------->
+                <a href="#">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+        </section>
+        <!--btns--------------->
+        <div class="btns">
+            <a href="/Next/next1.html">Next</a>
+        </div>
+    </div>
+    <div id="Punjabi" class="content">
+        <!--Punjabi movies---------------------------->
+        <div class="movies-heading">
+            <h2>Punjabi Movies</h2>
+        </div>
+        <section id="movies-list">
+            <!--box-1------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-1.jpg">
+                </div>
+                <!--text--------->
+                <a href="movie charlie.html">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+            <!--box-2------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-2.jpg">
+                </div>
+                <!--text--------->
+                <a href="#">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+            <!--box-3------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-3.jpg">
+                </div>
+                <!--text--------->
+                <a href="#">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+            <!--box-4------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-4.jpg">
+                </div>
+                <!--text--------->
+                <a href="#">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+            <!--box-5------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-5.jpg">
+                </div>
+                <!--text--------->
+                <a href="#">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+            <!--box-6------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-6.jpg">
+                </div>
+                <!--text--------->
+                <a href="#">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+            <!--box-7------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-7.jpg">
+                </div>
+                <!--text--------->
+                <a href="#">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+            <!--box-8------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-8.jpg">
+                </div>
+                <!--text--------->
+                <a href="#">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+        </section>
+        <!--btns--------------->
+        <div class="btns">
+            <a href="/Next/next1.html">Next</a>
+        </div>
+    </div>
+    <div id="Dramas" class="content">
+        <!--Dramas---------------------------->
+        <div class="movies-heading">
+            <h2>Dramas</h2>
+        </div>
+        <section id="movies-list">
+            <!--box-1------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-1.jpg">
+                </div>
+                <!--text--------->
+                <a href="movie charlie.html">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+            <!--box-2------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-2.jpg">
+                </div>
+                <!--text--------->
+                <a href="#">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+            <!--box-3------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-3.jpg">
+                </div>
+                <!--text--------->
+                <a href="#">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+            <!--box-4------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-4.jpg">
+                </div>
+                <!--text--------->
+                <a href="#">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+            <!--box-5------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-5.jpg">
+                </div>
+                <!--text--------->
+                <a href="#">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+            <!--box-6------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-6.jpg">
+                </div>
+                <!--text--------->
+                <a href="#">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+            <!--box-7------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-7.jpg">
+                </div>
+                <!--text--------->
+                <a href="#">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+            <!--box-8------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-8.jpg">
+                </div>
+                <!--text--------->
+                <a href="#">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+        </section>
+        <!--btns--------------->
+        <div class="btns">
+            <a href="/Next/next1.html">Next</a>
+        </div>
+    </div>
+    <div id="Pakistani" class="content">
+        <!--Pakastani movies---------------------------->
+        <div class="movies-heading">
+            <h2>Pakistani Movies</h2>
+        </div>
+        <section id="movies-list">
+            <!--box-1------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-1.jpg">
+                </div>
+                <!--text--------->
+                <a href="movie charlie.html">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+            <!--box-2------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-2.jpg">
+                </div>
+                <!--text--------->
+                <a href="#">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+            <!--box-3------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-3.jpg">
+                </div>
+                <!--text--------->
+                <a href="#">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+            <!--box-4------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-4.jpg">
+                </div>
+                <!--text--------->
+                <a href="#">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+            <!--box-5------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-5.jpg">
+                </div>
+                <!--text--------->
+                <a href="#">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+            <!--box-6------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-6.jpg">
+                </div>
+                <!--text--------->
+                <a href="#">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+            <!--box-7------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-7.jpg">
+                </div>
+                <!--text--------->
+                <a href="#">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+            <!--box-8------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-8.jpg">
+                </div>
+                <!--text--------->
+                <a href="#">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+        </section>
+        <!--btns--------------->
+        <div class="btns">
+            <a href="/Next/next1.html">Next</a>
+        </div>
+    </div>
+    <div id="Cartoon" class="content">
+        <!--Cartoon---------------------------->
+        <div class="movies-heading">
+            <h2>Cartoon</h2>
+        </div>
+        <section id="movies-list">
+            <!--box-1------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-1.jpg">
+                </div>
+                <!--text--------->
+                <a href="movie charlie.html">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+            <!--box-2------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-2.jpg">
+                </div>
+                <!--text--------->
+                <a href="#">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+            <!--box-3------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-3.jpg">
+                </div>
+                <!--text--------->
+                <a href="#">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+            <!--box-4------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-4.jpg">
+                </div>
+                <!--text--------->
+                <a href="#">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+            <!--box-5------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-5.jpg">
+                </div>
+                <!--text--------->
+                <a href="#">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+            <!--box-6------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-6.jpg">
+                </div>
+                <!--text--------->
+                <a href="#">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+            <!--box-7------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img src="/images/l-7.jpg">
+                </div>
+                <!--text--------->
+                <a href="#">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+            <!--box-8------------------------>
+            <div class="movies-box">
+                <!--img------------>
+                <div class="movies-img">
+                    <div class="quality">HDRip</div>
+                    <img
+                        src="data:image/jpeg;base64,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">
+                </div>
+                <!--text--------->
+                <a href="#">
+                    Tin (2018) Full Movie[In English] With English Subtitles | HDRip 1080p HD
+                </a>
+                <div class="btns">
+                    <a href="movie charlie.html">Watch</a>
+                </div>
+            </div>
+        </section>
+        <!--btns--------------->
+        <div class="btns">
+            <a href="/Next/next1.html">Next</a>
+        </div>
+    </div>
+
+
+    <!-- Footer -->
+    <footer>
+        <p>Going To Internet, Ltd Consumer Website</p>
+        <p>Copyright 2020 - GoingToInternet</p>
+    </footer>
+
+    <script>
+        function showContent(category) {
+            const contents = document.querySelectorAll('.content');
+            contents.forEach(content => content.classList.remove('active'));
+
+            const selectedContent = document.getElementById(category);
+            if (selectedContent) {
+                selectedContent.classList.add('active');
+            }
+        }
+
+        $(document).ready(function () {
+            $('#autoWidth, #autoWidth2').lightSlider({
+                autoWidth: true,
+                loop: true,
+                onSliderLoad: function () {
+                    $('#autoWidth, #autoWidth2').removeClass('cS-hidden');
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
+
+</html>

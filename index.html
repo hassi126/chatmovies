@@ -485,6 +485,70 @@
             display: block;
             padding: 20px;
         }
+        section {
+            margin: 20px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .movie-card {
+            display: flex;
+            flex-direction: column;
+            
+            
+            
+        }
+
+        .movie-card img {
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        .movie-card button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        /* Video Player */
+        #video-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        #movie-video {
+            width: 70%;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            background-color: transparent;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        .close-btn:hover {
+            color: red;
+        }
+
     </style>
 </head>
 <!DOCTYPE html>
@@ -592,7 +656,7 @@
                             <strong>Blackout 2024. Hassi4u.org WEB-DL Dual Audio ORG 720p 990MB.mkv</strong>
                             <p>Action Movie</p>
                             <div class="btns">
-                                <a href="/MoviesFile/Blackout.html" onClick="toggleVideo();">Watch</a>
+                                <a  onclick="playMovie('https://ok.ru/video/9002208135896?fromTime=101')">Watch</a>
                             </div>
                 <li class="item-a">
                     <div class="latest-box">
@@ -600,6 +664,9 @@
                         <div class="latest-b-img">
                             <img src="/images/m-1.jpg">
                         </div>
+                        
+
+
                         <!--text---------->
                         <div class="latest-b-text">
                             <strong>Mary 2024 ORG Hindi Dubbed 720p NF HD.mkv.mp4 at Hassi4u</strong>
@@ -727,7 +794,7 @@
                             <strong>Kin 2018</strong>
                             <p>Action Movie</p>
                             <div class="btns">
-                                <a href="/MoviesFile/Avesham.html" onClick="toggleVideo();">Watch</a>
+                                <a href="/MoviesFile/Avesham.html" onclick="playMovie('https://www.w3schools.com/html/mov_bbb.mp4')"">Watch</a>
                             </div>
                         </div>
                     </div>
@@ -744,12 +811,22 @@
                             <strong>Kin 2018</strong>
                             <p>Action Movie</p>
                             <div class="btns">
-                                <a href="/MoviesFile/Avesham.html" onClick="toggleVideo();">Watch</a>
+                                <button onclick="playMovie('https://www.w3schools.com/html/mov_bbb.mp4')" class="btns">Play Movie</button>
                             </div>
                         </div>
                 </li>
                 <!-- Repeat similar blocks for other movies -->
             </ul>
+           
+            
+<div id="video-container">
+    <video id="movie-video" controls>
+        <source id="video-source" src="" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <button class="close-btn" onclick="closeVideo()">&times;</button>
+</div>
+
             <script async="async" data-cfasync="false" src="//pl25504611.profitablecpmrate.com/527d859c57aab2a2738456bdaa84463d/invoke.js"></script>
 <div id="container-527d859c57aab2a2738456bdaa84463d"></div>
             <!--movies---------------------------->
@@ -1987,6 +2064,30 @@
     </script>
     <script type='text/javascript' src='//pl25504409.profitablecpmrate.com/37/33/9f/37339f658f4d3fd7d6ce43d7bdb37033.js'></script>
     <script type='text/javascript' src='//pl25504738.profitablecpmrate.com/43/1c/ce/431cce2883af645fc38edb2a9fbd2d04.js'></script>
+    
+<script>
+    function playMovie(videoUrl) {
+        const videoContainer = document.getElementById('video-container');
+        const videoSource = document.getElementById('video-source');
+        const videoElement = document.getElementById('movie-video');
+
+        videoSource.src = videoUrl;
+        videoElement.load();
+        videoElement.play();
+
+        videoContainer.style.display = 'flex';
+    }
+
+    function closeVideo() {
+        const videoContainer = document.getElementById('video-container');
+        const videoElement = document.getElementById('movie-video');
+
+        videoElement.pause();
+        videoElement.currentTime = 0;
+        videoContainer.style.display = 'none';
+    }
+</script>
+
 </body>
 </html>
 
